@@ -1,0 +1,16 @@
+spring:
+  profiles.active: local
+---
+spring:
+  profiles: local
+  
+  data:
+   mongodb:
+    uri: mongodb://localhost/sjcnewsdb
+---
+spring:
+  profiles: production
+    
+  data:
+   mongodb:
+    uri: ${mongo.url}
