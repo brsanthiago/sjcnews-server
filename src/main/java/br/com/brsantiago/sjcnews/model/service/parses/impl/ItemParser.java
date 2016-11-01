@@ -16,6 +16,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import br.com.brsantiago.sjcnews.model.document.Item;
@@ -29,7 +30,7 @@ public class ItemParser extends AbstractParser {
 
 	private static final String AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) "
 			+ "Chrome/33.0.1750.152 Safari/537.36";
-	private final String BASE_URL = "http://www.sjc.sp.gov.br/pmsjc_paginas/rss.aspx";
+
 	private static String TITLE = "title";
 	private static String CONTENT = "content";
 	private static String PHOTO = "foto";
@@ -39,13 +40,16 @@ public class ItemParser extends AbstractParser {
 	private static String GUID = "guid";
 	private static String PUB_DATE = "pubDate";
 
+	@Value("${url.feed}")
+	private String baseUrl;
+
 	@Autowired
 	private ItemRepository itemRepository;
 
 	@Override
 	public void parse() {
 		try {
-			Document rssDocument = Jsoup.connect(BASE_URL)
+			Document rssDocument = Jsoup.connect(baseUrl)
 					.ignoreContentType(true).parser(Parser.xmlParser())
 					.userAgent(AGENT).get();
 

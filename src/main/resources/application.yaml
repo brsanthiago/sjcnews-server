@@ -14,3 +14,7 @@ spring:
   data:
    mongodb:
     uri: ${mongo.url}
+    
+    
+url:
+  feed: http://www.sjc.sp.gov.br/pmsjc_paginas/rss.aspx
