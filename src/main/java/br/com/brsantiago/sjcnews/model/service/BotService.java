@@ -19,7 +19,6 @@ public class BotService {
 	@Autowired
 	private ItemParser itemParser;
 
-	@Async
 	public void run() {
 		itemParser.parse();
 	}
