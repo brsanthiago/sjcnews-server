@@ -3,8 +3,6 @@ package br.com.brsantiago.sjcnews.model.service.parses.impl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.LogManager;
@@ -48,6 +46,7 @@ public class ItemParser extends AbstractParser {
 
 	@Override
 	public void parse() {
+
 		try {
 			Document rssDocument = Jsoup.connect(baseUrl)
 					.ignoreContentType(true).parser(Parser.xmlParser())
