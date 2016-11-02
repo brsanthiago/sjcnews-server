@@ -1,12 +1,10 @@
 package br.com.brsantiago.sjcnews.model.document;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Item {
 
-	@Id
 	private String guid;
 	private String link;
 	private String title;

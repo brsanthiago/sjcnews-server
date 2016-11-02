@@ -1,8 +1,8 @@
 package br.com.brsantiago.sjcnews.model.service.parses.impl;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.LogManager;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import br.com.brsantiago.sjcnews.model.document.Item;
 import br.com.brsantiago.sjcnews.model.repositories.ItemRepository;
 import br.com.brsantiago.sjcnews.model.service.parses.AbstractParser;
+import br.com.brsantiago.sjcnews.util.DateUtil;
 
 @Component
 public class ItemParser extends AbstractParser {
@@ -71,7 +72,6 @@ public class ItemParser extends AbstractParser {
 		parseCreditoFotografo(element, item);
 		parseLegendaFoto(element, item);
 		parseData(element, item);
-		System.out.println(item);
 		saveItem(item);
 	}
 
@@ -104,7 +104,14 @@ public class ItemParser extends AbstractParser {
 		item.setContent(content);
 	}
 	private void parseFoto(final Element element, final Item item) {
-		item.setFoto(getSubValue(element, CONTENT, PHOTO).toString());
+
+		String foto = getSubValue(element, CONTENT, PHOTO);
+
+		if (!foto.isEmpty()) {
+			foto = foto.split(".jpg")[0] + "g.jpg";
+		}
+
+		item.setFoto(foto);
 	}
 	private void parseCreditoFotografo(final Element element, final Item item) {
 		item.setCreditoFotografo(
@@ -115,7 +122,12 @@ public class ItemParser extends AbstractParser {
 				getSubValue(element, CONTENT, LEGENDA_PHOTO).toString());
 	}
 	private void parseData(final Element element, final Item item) {
-		item.setPubDate(getValue(element, PUB_DATE).toString());
+		try {
+			final String data = DateUtil.getDate(getValue(element, PUB_DATE));
+			item.setPubDate(data);
+		} catch (ParseException e) {
+			item.setPubDate("");
+		}
 	}
 
 	private void saveItem(final Item item) {
@@ -124,21 +136,19 @@ public class ItemParser extends AbstractParser {
 		}
 	}
 
-	private Optional<String> getValue(final Element element, final String tag) {
+	private String getValue(final Element element, final String tag) {
 		if (tag != null && !tag.isEmpty()) {
-			return Optional.of(element.select(tag).text());
+			return element.select(tag).text();
 		}
-		return Optional.empty();
+		return "";
 	}
 
-	private Optional<String> getSubValue(final Element element,
-			final String parent, final String tag) {
-
+	private String getSubValue(final Element element, final String parent,
+			final String tag) {
 		if (element.select(parent).select(tag) != null
 				&& !element.select(parent).select(tag).isEmpty()) {
-			return Optional
-					.of(element.select(parent).select(tag).first().text());
+			return element.select(parent).select(tag).first().text();
 		}
-		return Optional.empty();
+		return "";
 	}
 }
