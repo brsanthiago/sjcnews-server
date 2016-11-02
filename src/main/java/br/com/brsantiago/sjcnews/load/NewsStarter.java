@@ -19,6 +19,7 @@ public class NewsStarter {
 
 	@PostConstruct
 	public void run() {
+		LOGGER.info(">>>>>> Passei pelo Starter");
 		service.parse();
 	}
 
